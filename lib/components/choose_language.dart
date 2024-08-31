@@ -6,14 +6,14 @@ import '../models/language.dart';
 import '../screens/language_page.dart';
 
 class ChooseLanguage extends StatefulWidget {
-  ChooseLanguage({Key key}) : super(key: key);
+  ChooseLanguage({Key? key}) : super(key: key);
 
   @override
   _ChooseLanguageState createState() => _ChooseLanguageState();
 }
 
 class _ChooseLanguageState extends State<ChooseLanguage> {
-  TranslateProvider _translateProvider;
+  late TranslateProvider _translateProvider;
 
   // Switch the first and the second language
   void _switchLanguage() {
@@ -67,7 +67,7 @@ class _ChooseLanguageState extends State<ChooseLanguage> {
         border: Border(
           bottom: BorderSide(
             width: 0.5,
-            color: Colors.grey[500],
+            color: Colors.grey[500]!,
           ),
         ),
       ),

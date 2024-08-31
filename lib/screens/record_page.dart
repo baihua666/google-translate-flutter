@@ -15,9 +15,9 @@ class RecordPage extends StatefulWidget {
 }
 
 class _RecordPageState extends State<RecordPage> {
-  TranslateProvider _translateProvider;
+  late TranslateProvider _translateProvider;
   var _speech = SpeechToText();
-  Timer _timer;
+  Timer? _timer;
   String _speechText = "";
 
   @override
@@ -28,7 +28,7 @@ class _RecordPageState extends State<RecordPage> {
 
   @override
   void deactivate() {
-    _timer.cancel();
+    _timer?.cancel();
     _speech.cancel();
     _speech.stop();
 
@@ -37,7 +37,7 @@ class _RecordPageState extends State<RecordPage> {
 
   @override
   void dispose() {
-    _timer.cancel();
+    _timer?.cancel();
     _speech.cancel();
     _speech.stop();
 
@@ -46,7 +46,7 @@ class _RecordPageState extends State<RecordPage> {
 
   _startTimer() {
     if (_timer != null) {
-      _timer.cancel();
+      _timer?.cancel();
     }
 
     _timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
@@ -59,8 +59,24 @@ class _RecordPageState extends State<RecordPage> {
   }
 
   Future<void> _initSpeechToText() async {
-    bool available = await _speech.initialize(
-        onStatus: _statusListener, onError: _errorListener);
+    // bool available = await _speech.initialize(
+    //     onStatus: _statusListener, onError: _errorListener);
+
+    var available = await _speech.initialize(
+      onError: _errorListener,
+      onStatus: _statusListener,
+      options: [SpeechToText.androidIntentLookup],
+      debugLogging: true,
+    );
+    if (available) {
+      // Get the list of languages installed on the supporting platform so they
+      // can be displayed in the UI for selection by the user.
+      var _localeNames = await _speech.locales();
+
+      var systemLocale = await _speech.systemLocale();
+      var _currentLocaleId = systemLocale?.localeId ?? '';
+      print("Current locale id: $_currentLocaleId");
+    }
 
     if (available) {
       _startTimer();
@@ -92,7 +108,7 @@ class _RecordPageState extends State<RecordPage> {
   }
 
   void _stopListening() {
-    _timer.cancel();
+    _timer?.cancel();
     _speech.stop();
     Navigator.pop(context, _speechText);
   }
@@ -149,7 +165,7 @@ class _RecordPageState extends State<RecordPage> {
                             isActive: true,
                             onClick: (bool isActive) {
                               _stopListening();
-                            },
+                            }, leftWidget: null, rightWidget: null,
                           ),
                           Container(
                             margin: EdgeInsets.only(top: 12),

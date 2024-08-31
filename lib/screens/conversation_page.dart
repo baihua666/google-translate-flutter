@@ -17,9 +17,9 @@ class ConversationPage extends StatefulWidget {
 }
 
 class _ConversationPageState extends State<ConversationPage> {
-  TranslateProvider _translateProvider;
+  late TranslateProvider _translateProvider;
   var _speech = SpeechToText();
-  Timer _timer;
+  Timer? _timer;
   String _talkNowTextLanguage1 = "";
   String _talkNowTextLanguage2 = "";
   String _textToTranslate = "";
@@ -36,7 +36,7 @@ class _ConversationPageState extends State<ConversationPage> {
   @override
   void deactivate() {
     _personTalkingIndex = -1;
-    _timer.cancel();
+    _timer?.cancel();
     _speech.cancel();
 
     super.deactivate();
@@ -45,7 +45,7 @@ class _ConversationPageState extends State<ConversationPage> {
   @override
   void dispose() {
     _personTalkingIndex = -1;
-    _timer.cancel();
+    _timer?.cancel();
     _speech.cancel();
 
     super.dispose();
@@ -53,7 +53,7 @@ class _ConversationPageState extends State<ConversationPage> {
 
   _startTimer() async {
     if (_timer != null) {
-      _timer.cancel();
+      _timer?.cancel();
     }
 
     _timer = Timer.periodic(Duration(seconds: 1), (Timer t) async {
@@ -83,24 +83,46 @@ class _ConversationPageState extends State<ConversationPage> {
   }
 
   Future<void> _initSpeechToText() async {
-    bool available = await _speech.initialize(
-        onStatus: _statusListener, onError: _errorListener);
+    // bool available = await _speech.initialize(
+    //     onStatus: _statusListener, onError: _errorListener);
 
-    if (available) {
-      _startTimer();
-      _speech.listen(
-        onResult: _resultListener,
-        localeId: _personTalkingIndex == 0
-            ? _translateProvider.firstLanguage.code
-            : _translateProvider.secondLanguage.code,
+    try {
+      var available = await _speech.initialize(
+        onError: _errorListener,
+        onStatus: _statusListener,
+        options: [SpeechToText.androidIntentLookup],
+        debugLogging: true,
       );
-    } else {
-      print("The user has denied the use of speech recognition.");
+      if (available) {
+        // Get the list of languages installed on the supporting platform so they
+        // can be displayed in the UI for selection by the user.
+        var localeNames = await _speech.locales();
+
+        var systemLocale = await _speech.systemLocale();
+        var currentLocaleId = systemLocale?.localeId ?? '';
+        print("Current locale id: $currentLocaleId");
+      }
+
+      if (available) {
+        _startTimer();
+        _speech.listen(
+          onResult: _resultListener,
+          localeId: _personTalkingIndex == 0
+              ? _translateProvider.firstLanguage.code
+              : _translateProvider.secondLanguage.code,
+        );
+      } else {
+        print("The user has denied the use of speech recognition.");
+      }
+    } catch (e) {
+      print('Speech recognition failed: ${e.toString()}');
     }
+
+
   }
 
   _stopSpeech() async {
-    _timer.cancel();
+    _timer?.cancel();
     await _speech.stop();
 
     setState(() {
@@ -131,7 +153,7 @@ class _ConversationPageState extends State<ConversationPage> {
             from: firstLanguageCode, to: secondLanguageCode)
         .then((translatedText) {
       setState(() {
-        _textTranslated = translatedText;
+        _textTranslated = translatedText.text;
       });
     });
 
@@ -153,9 +175,11 @@ class _ConversationPageState extends State<ConversationPage> {
         .translate("Talk now...",
             from: 'en', to: _translateProvider.firstLanguage.code)
         .then((translatedText) {
-      setState(() {
-        _talkNowTextLanguage1 = translatedText;
-      });
+        setState(() {
+          _talkNowTextLanguage1 = translatedText.text;
+        });
+    }).catchError((error) {
+      print(error);
     });
 
     _translator
@@ -163,7 +187,7 @@ class _ConversationPageState extends State<ConversationPage> {
             from: 'en', to: _translateProvider.secondLanguage.code)
         .then((translatedText) {
       setState(() {
-        _talkNowTextLanguage2 = translatedText;
+        _talkNowTextLanguage2 = translatedText.text;
       });
     });
   }
@@ -220,7 +244,8 @@ class _ConversationPageState extends State<ConversationPage> {
         ),
         backgroundColor: Colors.transparent,
         elevation: 0,
-        brightness: Brightness.light,
+        //         brightness: Brightness.light,
+        systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ActionButton extends StatefulWidget {
-  ActionButton({Key key, this.icon, this.text, this.imageIcon, this.onClick})
+  ActionButton({required Key? key, required this.icon, required this.text, required this.imageIcon, required this.onClick})
       : super(key: key);
 
-  final IconData icon;
-  final AssetImage imageIcon;
+  final IconData? icon;
+  final AssetImage? imageIcon;
   final String text;
   final Function onClick;
 
@@ -37,12 +37,14 @@ class _ActionButtonState extends State<ActionButton> {
   Widget build(BuildContext context) {
     return Material(
       color: Colors.white,
-      child: FlatButton(
-        padding: EdgeInsets.only(
-          left: 8.0,
-          right: 8.0,
-          top: 2.0,
-          bottom: 2.0,
+      child: TextButton(
+        style: TextButton.styleFrom(
+          padding: EdgeInsets.only(
+            left: 8.0,
+            right: 8.0,
+            top: 2.0,
+            bottom: 2.0,
+          ),
         ),
         onPressed: () {
           widget.onClick();

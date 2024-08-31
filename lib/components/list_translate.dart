@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/translate.dart';
 
 class ListTranslate extends StatefulWidget {
-  ListTranslate({Key key}) : super(key: key);
+  ListTranslate({Key? key}) : super(key: key);
 
   @override
   _ListTranslateState createState() => _ListTranslateState();

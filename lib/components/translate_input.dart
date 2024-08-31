@@ -5,9 +5,9 @@ import 'package:translator/translator.dart';
 
 class TranslateInput extends StatefulWidget {
   TranslateInput({
-    Key key,
-    this.onCloseClicked,
-    this.focusNode,
+    Key? key,
+    required this.onCloseClicked,
+    required this.focusNode,
   }) : super(key: key);
 
   final Function(bool) onCloseClicked;
@@ -18,7 +18,7 @@ class TranslateInput extends StatefulWidget {
 }
 
 class _TranslateInputState extends State<TranslateInput> {
-  TranslateProvider _translateProvider;
+  late TranslateProvider _translateProvider;
   TextEditingController _textEditingController = TextEditingController();
   String _textTranslated = "";
   GoogleTranslator _translator = new GoogleTranslator();
@@ -42,11 +42,13 @@ class _TranslateInputState extends State<TranslateInput> {
               from: _translateProvider.firstLanguage.code,
               to: _translateProvider.secondLanguage.code)
           .then((translatedText) {
-        if (translatedText != _textTranslated) {
-          setState(() {
-            _textTranslated = translatedText;
-          });
+            if (translatedText != _textTranslated) {
+              setState(() {
+                _textTranslated = translatedText.text;
+              });
         }
+      }).catchError((error) {
+        print('_translatingText:$error');
       });
     }
   }
@@ -71,7 +73,7 @@ class _TranslateInputState extends State<TranslateInput> {
                 controller: _textEditingController,
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
-                onChanged:_onTextChanged,
+                onChanged: _onTextChanged,
                 decoration: InputDecoration(
                   border: InputBorder.none,
                   suffixIcon: Container(

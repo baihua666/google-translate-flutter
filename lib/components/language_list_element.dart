@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/language.dart';
 
 class LanguageListElement extends StatefulWidget {
-  LanguageListElement({Key key, this.language, this.onSelect})
+  LanguageListElement({Key? key, required this.language, required this.onSelect})
       : super(key: key);
 
   final Language language;
@@ -15,7 +15,7 @@ class LanguageListElement extends StatefulWidget {
 
 class _LanguageListElementState extends State<LanguageListElement> {
 
-  Widget _displayTrailingIcon() {
+  Widget? _displayTrailingIcon() {
     if(this.widget.language.isDownloadable) {
       if(this.widget.language.isDownloaded) {
         return Icon(Icons.check_circle);

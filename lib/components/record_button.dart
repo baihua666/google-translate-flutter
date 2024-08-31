@@ -4,15 +4,15 @@ import 'package:flutter/material.dart';
 
 class RecordButton extends StatefulWidget {
   RecordButton({
-    this.leftWidget,
-    this.rightWidget,
-    this.onClick,
-    @required this.isActive,
+    required this.leftWidget,
+    required this.rightWidget,
+    required this.onClick,
+    required this.isActive,
   });
 
   final bool isActive;
-  final Widget leftWidget;
-  final Widget rightWidget;
+  final Widget? leftWidget;
+  final Widget? rightWidget;
   final Function(bool) onClick;
 
   @override
@@ -21,10 +21,10 @@ class RecordButton extends StatefulWidget {
 
 class _RecordButtonState extends State<RecordButton>
     with TickerProviderStateMixin {
-  Animation<double> _animation;
-  Animation<double> _animation2;
-  AnimationController _controller;
-  AnimationController _controller2;
+  Animation<double>? _animation;
+  Animation<double>? _animation2;
+  late AnimationController _controller;
+  late AnimationController _controller2;
 
   @override
   void initState() {
@@ -76,7 +76,7 @@ class _RecordButtonState extends State<RecordButton>
 
   Widget _displaysButtonWave2() {
     if (widget.isActive && _animation2 != null) {
-      return _buttonWave(_animation2);
+      return _buttonWave(_animation2!);
     } else {
       return Container(
         height: 140,
@@ -87,7 +87,7 @@ class _RecordButtonState extends State<RecordButton>
 
   Widget _displaysButtonWave1() {
     if (widget.isActive && _animation != null) {
-      return _buttonWave(_animation);
+      return _buttonWave(_animation!);
     } else {
       return Container(
         height: 140,
@@ -102,15 +102,17 @@ class _RecordButtonState extends State<RecordButton>
       child: ButtonTheme(
         minWidth: 70.0,
         height: 70.0,
-        child: RaisedButton(
+        child: ElevatedButton(
           onPressed: () {
             widget.onClick(widget.isActive);
           },
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(40.0),
+          style: ElevatedButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(40.0),
+            ),
+            elevation: widget.isActive ? null: 0,
+            backgroundColor: widget.isActive ? Colors.red : Color(0xFFededed),
           ),
-          elevation: widget.isActive ? null: 0,
-          color: widget.isActive ? Colors.red : Color(0xFFededed),
           child: Icon(
             Icons.mic,
             color: Colors.white,
@@ -131,13 +133,13 @@ class _RecordButtonState extends State<RecordButton>
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             widget.leftWidget != null
-                ? widget.leftWidget
+                ? widget.leftWidget!
                 : Expanded(
                     child: Container(),
                   ),
             _displaysRecordingButton(),
             widget.rightWidget != null
-                ? widget.rightWidget
+                ? widget.rightWidget!
                 : Expanded(
                     child: Container(),
                   ),

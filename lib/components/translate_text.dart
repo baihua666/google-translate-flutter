@@ -8,8 +8,8 @@ import 'action_button.dart';
 
 class TranslateText extends StatefulWidget {
   TranslateText({
-    Key key,
-    this.onTextTouched,
+    Key? key,
+    required this.onTextTouched,
   }) : super(key: key);
 
   final Function(bool) onTextTouched;
@@ -19,7 +19,7 @@ class TranslateText extends StatefulWidget {
 }
 
 class _TranslateTextState extends State<TranslateText> {
-  TranslateProvider _translateProvider;
+  late TranslateProvider _translateProvider;
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +57,11 @@ class _TranslateTextState extends State<TranslateText> {
               children: <Widget>[
                 ActionButton(
                   icon: Icons.camera_alt,
-                  text: "Camera",
+                  text: "Camera", key: null, imageIcon: null, onClick: () {},
                 ),
                 ActionButton(
                   imageIcon: AssetImage("assets/pen.png"),
-                  text: "Handwriting",
+                  text: "Handwriting", key: null, icon: null, onClick: () {},
                 ),
                 ActionButton(
                   imageIcon: AssetImage("assets/conversation.png"),
@@ -73,7 +73,7 @@ class _TranslateTextState extends State<TranslateText> {
                         builder: (context) => ConversationPage(),
                       ),
                     );
-                  },
+                  }, key: null, icon: null,
                 ),
                 ActionButton(
                   onClick: () async {
@@ -90,7 +90,7 @@ class _TranslateTextState extends State<TranslateText> {
                     }
                   },
                   icon: Icons.keyboard_voice,
-                  text: "Voice",
+                  text: "Voice", key: null, imageIcon: null,
                 ),
               ],
             ),

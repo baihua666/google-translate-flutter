@@ -5,7 +5,7 @@ import '../models/language.dart';
 import '../components/language_list_element.dart';
 
 class LanguagePage extends StatefulWidget {
-  LanguagePage({Key key, this.title, this.isAutomaticEnabled})
+  LanguagePage({Key? key, required this.title, required this.isAutomaticEnabled})
       : super(key: key);
 
   final String title;
@@ -145,7 +145,7 @@ class _LanguagePageState extends State<LanguagePage> {
   }
 
   // Display the delete text icon if we typed text in the search input
-  Widget _displayDeleteTextIcon() {
+  Widget? _displayDeleteTextIcon() {
     if (this._searchTextController.text.length > 0) {
       return IconButton(
         icon: Icon(Icons.close),
@@ -283,7 +283,7 @@ class _LanguagePageState extends State<LanguagePage> {
                 hintText: "Search",
                 border: InputBorder.none,
                 focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: Colors.blue[600])),
+                    borderSide: BorderSide(color: Colors.blue[600]!)),
                 prefixIcon: Icon(
                   Icons.search,
                   size: 24.0,

@@ -8,7 +8,7 @@ import '../components/list_translate.dart';
 import '../components/translate_input.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key key, this.title}) : super(key: key);
+  HomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -18,10 +18,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage>
     with SingleTickerProviderStateMixin {
-  TranslateProvider _translateProvider;
+  late TranslateProvider _translateProvider;
   FocusNode _textFocusNode = FocusNode();
-  AnimationController _controller;
-  Animation _animation;
+  late AnimationController _controller;
+  late Animation _animation;
 
   @override
   void initState() {
